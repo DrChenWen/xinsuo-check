@@ -1,0 +1,16 @@
+{
+  "name": "五十心所 · 每日省察",
+  "short_name": "心所省察",
+  "description": "唯识心所日志打卡与自我检测工具——善心所对照自选，不善心所逐条省察，每日及时反省，择善去非。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f1e8",
+  "theme_color": "#2f4a3e",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2f4a3e">
+<meta name="description" content="五十心所 · 每日省察——唯识心所日志打卡与自我检测工具">
+<title>五十心所 · 每日省察</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <h1>五十心所 · 每日省察</h1>
+    <p class="subtitle">唯识心所 · 择善去非 · 日志打卡</p>
+  </div>
+</header>
+
+<main>
+  <!-- ================= 打卡视图 ================= -->
+  <section id="view-check" class="view active">
+    <div class="datebar">
+      <button class="date-btn" id="prevDay" aria-label="前一天">◀</button>
+      <div class="date-display">
+        <span id="dateText">—</span>
+        <span id="checkState" class="check-state"></span>
+      </div>
+      <button class="date-btn" id="nextDay" aria-label="后一天">▶</button>
+      <button class="date-btn today-btn" id="todayBtn">今</button>
+    </div>
+
+    <!-- 当日摘要 -->
+    <div id="summaryCard" class="summary-card hidden">
+      <div class="summary-grid">
+        <div class="sum-item sum-shan"><span class="sum-label">善分</span><span id="sumShan" class="sum-val">0</span><span class="sum-sub">/11</span></div>
+        <div class="sum-item sum-bu"><span class="sum-label">不善</span><span id="sumBu" class="sum-val">0</span><span class="sum-sub">/45</span></div>
+        <div class="sum-item sum-verdict"><span class="sum-label">日评</span><span id="sumVerdict" class="sum-val verdict-text">—</span></div>
+      </div>
+    </div>
+
+    <!-- 单元一：择善 -->
+    <div class="unit">
+      <div class="unit-head">
+        <h2><span class="unit-tag unit-tag-shan">一</span> 择善 · 善心所对照</h2>
+        <p class="unit-note">十一善心所，各与其对治之不善心所并观。每日自择所处：善现前、平（无记·未察）、或恶现前。<br><em>「无惭愧及不信等，与上善法相返，义相对照可知。」——憨山《百法论义》</em></p>
+      </div>
+      <div id="duizhaoList" class="item-list"></div>
+    </div>
+
+    <!-- 单元二：去非 -->
+    <div class="unit">
+      <div class="unit-head">
+        <h2><span class="unit-tag unit-tag-bu">二</span> 去非 · 不善心所</h2>
+        <p class="unit-note">慢、疑、恶见等十五种无直接善法对治之不善心所，逐条省察今日显现之轻重：未现、微现、明显、炽盛。</p>
+      </div>
+      <div id="duliList" class="item-list"></div>
+    </div>
+
+    <!-- 省思札记 -->
+    <div class="unit">
+      <div class="unit-head">
+        <h2><span class="unit-tag unit-tag-ji">三</span> 省思札记</h2>
+        <p class="unit-note">记录今日最值得反省的一件事，与明日所修之方。理论学习再详细，终要落在行动里比对。</p>
+      </div>
+      <div class="note-box">
+        <label for="noteReflect">今日省思</label>
+        <textarea id="noteReflect" rows="3" placeholder="今日于何境、起何心、如何转？"></textarea>
+        <label for="notePlan">明日所修</label>
+        <textarea id="notePlan" rows="2" placeholder="明日重点对治哪一心所？择一善法着力。"></textarea>
+      </div>
+    </div>
+
+    <button id="saveBtn" class="save-btn">保存今日省察</button>
+    <p id="saveMsg" class="save-msg"></p>
+  </section>
+
+  <!-- ================= 回顾视图 ================= -->
+  <section id="view-review" class="view">
+    <div class="unit">
+      <div class="unit-head">
+        <h2><span class="unit-tag unit-tag-shan">概</span> 进步与问题</h2>
+        <p class="unit-note">每日及时反省，了解进步与问题所在。数据仅存于本机浏览器。</p>
+      </div>
+      <div class="stat-cards">
+        <div class="stat-card"><span class="stat-label">累计打卡</span><span id="statDays" class="stat-num">0</span><span class="stat-unit">天</span></div>
+        <div class="stat-card"><span class="stat-label">连续打卡</span><span id="statStreak" class="stat-num">0</span><span class="stat-unit">天</span></div>
+        <div class="stat-card"><span class="stat-label">近7日善分均值</span><span id="statShanAvg" class="stat-num">—</span><span class="stat-unit">/11</span></div>
+        <div class="stat-card"><span class="stat-label">近7日不善均分</span><span id="statBuAvg" class="stat-num">—</span><span class="stat-unit">/45</span></div>
+      </div>
+    </div>
+
+    <div class="unit">
+      <div class="unit-head"><h2><span class="unit-tag unit-tag-shan">趋</span> 三十日趋势</h2></div>
+      <div class="chart-wrap">
+        <canvas id="trendChart" height="180"></canvas>
+        <p class="chart-legend"><span class="dot dot-shan"></span>善分 <span class="dot dot-bu"></span>不善分</p>
+      </div>
+    </div>
+
+    <div class="unit">
+      <div class="unit-head"><h2><span class="unit-tag unit-tag-bu">问</span> 近三十日 · 不善心所排行</h2></div>
+      <div id="buRank" class="rank-list"></div>
+    </div>
+
+    <div class="unit">
+      <div class="unit-head"><h2><span class="unit-tag unit-tag-shan">进</span> 近三十日 · 善法现前</h2></div>
+      <div id="shanRank" class="rank-list"></div>
+    </div>
+
+    <div class="unit">
+      <div class="unit-head"><h2><span class="unit-tag unit-tag-ji">历</span> 打卡日历</h2></div>
+      <div class="cal-head">
+        <button class="date-btn" id="calPrev">◀</button>
+        <span id="calTitle">—</span>
+        <button class="date-btn" id="calNext">▶</button>
+      </div>
+      <div id="calendar" class="calendar"></div>
+    </div>
+
+    <div class="unit">
+      <div class="unit-head"><h2><span class="unit-tag unit-tag-ji">据</span> 数据管理</h2></div>
+      <p class="unit-note">数据保存在本机浏览器 localStorage。换设备或清缓存前请先导出备份。</p>
+      <div class="data-actions">
+        <button id="exportBtn" class="sec-btn">导出备份 JSON</button>
+        <button id="importBtn" class="sec-btn">导入备份</button>
+        <input type="file" id="importFile" accept=".json" hidden>
+        <button id="clearBtn" class="sec-btn danger">清空全部数据</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 词典视图 ================= -->
+  <section id="view-dict" class="view">
+    <div class="unit">
+      <div class="unit-head">
+        <h2><span class="unit-tag unit-tag-ji">典</span> 六位心所总览</h2>
+        <p class="unit-note">《大乘百法明门论》《成唯识论》六位五十一心所：遍行五、别境五、善十一、烦恼六、随烦恼二十、不定四。<br>心王不会造业，造业者乃心所为之。故对治自心，重在省察心所。</p>
+      </div>
+      <div id="liuweiTable" class="liuwei-table"></div>
+    </div>
+
+    <div class="unit">
+      <div class="unit-head"><h2><span class="unit-tag unit-tag-shan">善</span> 善心所（十一）</h2></div>
+      <div id="dictShan" class="dict-list"></div>
+    </div>
+    <div class="unit">
+      <div class="unit-head"><h2><span class="unit-tag unit-tag-bu">烦</span> 根本烦恼（六）与随烦恼（二十）</h2></div>
+      <div id="dictBu" class="dict-list"></div>
+    </div>
+    <div class="unit">
+      <div class="unit-head"><h2><span class="unit-tag unit-tag-ji">遍</span> 遍行（五）· 别境（五）· 不定（四）</h2></div>
+      <div id="dictOther" class="dict-list"></div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-view="check"><span class="nav-icon">☀</span>打卡</button>
+  <button class="nav-btn" data-view="review"><span class="nav-icon">📈</span>回顾</button>
+  <button class="nav-btn" data-view="dict"><span class="nav-icon">📖</span>词典</button>
+</nav>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
